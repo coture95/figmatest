@@ -50,30 +50,21 @@ create table if not exists public.saved_plans (
 );
 create index if not exists saved_plans_client_idx on public.saved_plans (client_id, saved_at desc);
 
--- 5) 보안(RLS): 브라우저(anon)는 요금제 읽기와 신청·상담·저장 추가만. 읽기는 서버(service role)만 -----
-alter table public.plans             enable row level security;
-alter table public.change_requests   enable row level security;
-alter table public.consult_requests  enable row level security;
-alter table public.saved_plans       enable row level security;
+-- 5) 보안(RLS): 끔. 테스트용 DB라 사용자가 직접 정했다. ------------------------------------------
+-- 주의: RLS가 꺼져 있으면 anon 키(브라우저에 노출되는 키)만 알아도 4개 테이블을 읽고 쓰고 지울 수 있다.
+--       실제 서비스로 쓰기 전에 RLS를 켜고 정책을 만들어야 한다. (이전 안은 git 기록 12d4af0에 있다.)
+alter table public.plans             disable row level security;
+alter table public.change_requests   disable row level security;
+alter table public.consult_requests  disable row level security;
+alter table public.saved_plans       disable row level security;
 
+-- 이전 실행에서 만든 정책이 남아 있으면 지운다.
 drop policy if exists plans_read on public.plans;
-create policy plans_read on public.plans
-  for select to anon, authenticated using (true);
-
 drop policy if exists change_requests_insert on public.change_requests;
-create policy change_requests_insert on public.change_requests
-  for insert to anon, authenticated with check (status = 'received');
-
 drop policy if exists consult_requests_insert on public.consult_requests;
-create policy consult_requests_insert on public.consult_requests
-  for insert to anon, authenticated with check (true);
-
 drop policy if exists saved_plans_insert on public.saved_plans;
-create policy saved_plans_insert on public.saved_plans
-  for insert to anon, authenticated with check (true);
 
--- 읽기·수정·삭제 정책은 일부러 만들지 않는다. service role 키는 RLS를 우회하므로 서버에서만 읽는다.
--- 권한도 최소로 맞춘다: anon이 신청·상담·저장 테이블을 읽거나 고치지 못하게 한다.
-revoke all on public.change_requests, public.consult_requests, public.saved_plans from anon, authenticated;
-grant insert on public.change_requests, public.consult_requests, public.saved_plans to anon, authenticated;
-grant select on public.plans to anon, authenticated;
+-- 브라우저(anon, authenticated)가 4개 테이블을 모두 쓸 수 있게 권한을 연다.
+grant select, insert, update, delete
+  on public.plans, public.change_requests, public.consult_requests, public.saved_plans
+  to anon, authenticated;

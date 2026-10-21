@@ -52,3 +52,4 @@ screen-spec.md와 03-token-map.md의 '미정'·'토큰 없음' 중 구현에 걸
 - 고객 구분: 브라우저가 만든 익명 UUID(`client_id`). 이름·전화번호 등 개인정보 컬럼은 만들지 않는다.
 - 보안: 모든 테이블 RLS 켬. 브라우저(anon 키)는 `plans` 읽기와 신청·상담·저장 insert만. 신청·상담·저장 읽기는 서버(`SUPABASE_SERVICE_ROLE_KEY`)에서만. service role 키는 브라우저 코드에 쓰지 않는다.
 - 실행: `supabase/migrations/*.sql`을 사용자가 Supabase SQL Editor에서 직접 실행한다. 앱 코드 연결은 별도 요청이 있을 때 한다.
+- **보안 변경(사용자 요청):** 테스트 후 지울 DB라서 RLS를 **끈다**. 위 "RLS 켜고 읽기는 서버만" 결정을 대체한다. anon 키로 4개 테이블 읽기·쓰기·삭제가 모두 가능하므로 실제 서비스 전에는 RLS를 켜야 한다. 이전 안은 커밋 12d4af0에 있다.
