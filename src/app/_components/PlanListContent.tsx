@@ -65,7 +65,7 @@ export default function PlanListContent() {
                 )}
                 <h3 className="text-subtitle font-bold text-text-primary">{plan.name}</h3>
                 <p className="text-body-small font-medium text-text-secondary">
-                  데이터 {plan.dataGb}GB · 통화·문자 기본 제공
+                  데이터 {plan.dataGb}GB · 통화 {plan.voice} · 문자 {plan.sms}
                 </p>
                 <ListRow
                   label="최대 이용량 / 제공량"

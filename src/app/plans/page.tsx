@@ -15,11 +15,10 @@ export default function PlansPage() {
     <Screen
       /* 상단 제목줄 (서비스 진입 화면용 root 형태). 제목은 "요금제 목록". */
       header={<Header type="root" title="요금제 목록" />}
-      /* 하단 안내 문구: 이용량 기준으로 고르라는 안내. screens.md의 하단 안내 문구와 다르고,
-         이 문구를 PRD가 정했는지는 [문서에 없음]. */
+      /* 하단 안내 문구: screens.md의 하단 안내 문구 그대로. 5단계 승인 때 사용자가 이 문구로 복원하도록 정했다. */
       footer={
         <p className="shrink-0 px-4 pb-8 pt-3 text-caption font-medium text-text-secondary">
-          요금제는 최근 3개월 이용량을 기준으로 골라 보세요.
+          요금제를 선택하면 상세 내용을 확인할 수 있어요
         </p>
       }
     >

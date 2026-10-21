@@ -3,12 +3,15 @@ export type Plan = {
   name: string;
   price: number;
   dataGb: number;
+  voice: string;
+  sms: string;
 };
 
+// 통화·문자 제공량: doc/screens.md 요금제 목록의 요금제별 값
 export const PLANS: Plan[] = [
-  { id: "basic", name: "베이직", price: 4900, dataGb: 3 },
-  { id: "standard", name: "스탠다드", price: 9900, dataGb: 10 },
-  { id: "premium", name: "프리미엄", price: 19900, dataGb: 30 },
+  { id: "basic", name: "베이직", price: 4900, dataGb: 3, voice: "50분", sms: "50건" },
+  { id: "standard", name: "스탠다드", price: 9900, dataGb: 10, voice: "100분", sms: "100건" },
+  { id: "premium", name: "프리미엄", price: 19900, dataGb: 30, voice: "무제한", sms: "무제한" },
 ];
 
 export const CUSTOMER_NAME = "테스트 고객";

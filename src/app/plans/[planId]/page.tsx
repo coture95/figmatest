@@ -95,14 +95,14 @@ export default async function PlanDetailPage({
         </p>
       </section>
 
-      {/* 제공 혜택: 데이터 제공량을 보여준다. 통화·문자는 요금제별 수치 없이 "기본 제공"으로만 표시한다
-          (screens.md의 통화·문자 수치와 다르며, 이렇게 바꾼 근거는 [문서에 없음]). */}
+      {/* 제공 혜택: 데이터·통화·문자 제공량을 보여준다. 통화·문자 수치는 screens.md의
+          요금제별 값(분·건수)이며, 5단계 승인 때 사용자가 이 값으로 복원하도록 정했다. */}
       <section className="flex flex-col gap-3">
         <h2 className="text-heading-h3 font-bold text-text-primary">제공 혜택</h2>
         <div className="flex flex-col">
           <ListRow label="데이터" value={`${plan.dataGb}GB`} />
-          <ListRow label="통화" value="기본 제공" />
-          <ListRow label="문자" value="기본 제공" />
+          <ListRow label="통화" value={plan.voice} />
+          <ListRow label="문자" value={plan.sms} />
         </div>
       </section>
     </Screen>
