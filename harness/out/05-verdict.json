@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-10-21T06:09:24.538Z",
+  "passed": true,
+  "returnTo": null,
+  "gates": [
+    {
+      "id": "G1",
+      "name": "라우트 수 = 4",
+      "pass": true,
+      "returnTo": 4,
+      "detail": []
+    },
+    {
+      "id": "G2",
+      "name": "토큰 밖 값 0건",
+      "pass": true,
+      "returnTo": 3,
+      "detail": []
+    },
+    {
+      "id": "G3",
+      "name": "금지 문구 0건",
+      "pass": true,
+      "returnTo": 4,
+      "detail": []
+    },
+    {
+      "id": "G4",
+      "name": "위약금·약정 안내가 신청 버튼보다 앞",
+      "pass": true,
+      "returnTo": 4,
+      "detail": []
+    },
+    {
+      "id": "G5",
+      "name": "build·lint 통과",
+      "pass": true,
+      "returnTo": 4,
+      "detail": []
+    },
+    {
+      "id": "G6",
+      "name": "개인정보 형태 값 0건",
+      "pass": true,
+      "returnTo": 4,
+      "detail": []
+    }
+  ]
+}
