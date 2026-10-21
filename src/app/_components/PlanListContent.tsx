@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import {
   CUSTOMER_NAME,
   MONTHLY_USAGE,
@@ -10,14 +10,24 @@ import {
   RECOMMENDED_PLAN,
   formatWon,
 } from "../_lib/plans";
-import { getSavedRaw, getSavedServerRaw, parseSaved, subscribeSaved } from "../_lib/saved";
+import { fetchLatestSaved, type SavedPlan } from "../_lib/saved";
 import ListRow from "./ListRow";
 import Tag from "./Tag";
 import { buttonClass } from "./buttonStyle";
 
 export default function PlanListContent() {
-  const raw = useSyncExternalStore(subscribeSaved, getSavedRaw, getSavedServerRaw);
-  const saved = useMemo(() => parseSaved(raw), [raw]);
+  // 저장함 표시(F12): DB(saved_plans)에서 이 고객의 가장 최근 저장 1행을 읽어 판단한다.
+  // 읽기 전이거나 읽기에 실패하면 저장 없음으로 본다([문서에 없음]).
+  const [saved, setSaved] = useState<SavedPlan | null>(null);
+  useEffect(() => {
+    let active = true;
+    fetchLatestSaved().then((value) => {
+      if (active) setSaved(value);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <>

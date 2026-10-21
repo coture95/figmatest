@@ -4,6 +4,7 @@ import ConsultRequest from "../../../_components/ConsultRequest";
 import Header from "../../../_components/Header";
 import ListRow from "../../../_components/ListRow";
 import Screen from "../../../_components/Screen";
+import SubmitButton from "../../../_components/SubmitButton";
 import { buttonClass } from "../../../_components/buttonStyle";
 import {
   PENALTY_ITEMS,
@@ -77,19 +78,13 @@ export default async function SubscribePage({
   // 하단 액션 3개 (F8): 신청 > 상담 요청 > 취소 순서로 유도한다.
   const actions = (
     <div className="flex shrink-0 flex-col gap-2 border-t border-border-subtle bg-bg-surface px-4 pb-8 pt-3">
-      {/* 신청 버튼 (F9): 최종 완료. 변경 신청을 접수하고 신청 완료 화면으로 이동한다.
+      {/* 신청 버튼 (F9): 최종 완료. 변경 신청을 DB에 접수하고, 성공하면 신청 완료 화면으로 이동한다.
           실제 요금제 변경은 하지 않는다. */}
-      <Link
-        href={`/plans/${plan.id}/subscribe/complete`}
-        data-gate="primary-submit"
-        className={buttonClass({ variant: "primary", size: "xl" })}
-      >
-        신청
-      </Link>
+      <SubmitButton planId={plan.id} data-gate="primary-submit" />
       {/* 상담 요청 버튼 (F11): 위약금이 부담스러운 고객이 신청 대신 고르는 선택지.
-          입력 없이 접수하고 안내 팝업을 띄우며, 팝업의 확인을 누르면 이전 페이지로 이동한다
+          입력 없이 DB에 접수하고 안내 팝업을 띄우며, 팝업의 확인을 누르면 이전 페이지로 이동한다
           (완료 후 변경 요청). */}
-      <ConsultRequest />
+      <ConsultRequest planId={plan.id} source="subscribe" />
       {/* 취소 버튼 (F10): 신청하지 않고 요금제 상세로 돌아간다. */}
       <Link
         href={`/plans/${plan.id}`}

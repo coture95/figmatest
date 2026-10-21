@@ -53,3 +53,16 @@ screen-spec.md와 03-token-map.md의 '미정'·'토큰 없음' 중 구현에 걸
 - 보안: 모든 테이블 RLS 켬. 브라우저(anon 키)는 `plans` 읽기와 신청·상담·저장 insert만. 신청·상담·저장 읽기는 서버(`SUPABASE_SERVICE_ROLE_KEY`)에서만. service role 키는 브라우저 코드에 쓰지 않는다.
 - 실행: `supabase/migrations/*.sql`을 사용자가 Supabase SQL Editor에서 직접 실행한다. 앱 코드 연결은 별도 요청이 있을 때 한다.
 - **보안 변경(사용자 요청):** 테스트 후 지울 DB라서 RLS를 **끈다**. 위 "RLS 켜고 읽기는 서버만" 결정을 대체한다. anon 키로 4개 테이블 읽기·쓰기·삭제가 모두 가능하므로 실제 서비스 전에는 RLS를 켜야 한다. 이전 안은 커밋 12d4af0에 있다.
+
+## Supabase 앱 연결 (사용자 요청: "테이블 만들어 놨으니 데이터베이스 연결해줘")
+- 클라이언트: `@supabase/supabase-js`. 브라우저에서 `NEXT_PUBLIC_SUPABASE_URL`과 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`만 쓴다. `NEXT_PUBLIC_SUPABASE_ANON_KEY`는 `.env.local`에서 비어 있어 쓰지 않는다. `SUPABASE_SERVICE_ROLE_KEY`는 비어 있고 브라우저 코드에 쓰지 않는다. 키 값을 코드·주석·로그에 적지 않는다.
+- 고객 구분: 브라우저 localStorage에 익명 UUID(`client_id`)를 한 번 만들어 재사용한다(`crypto.randomUUID()`). 개인정보는 저장하지 않는다.
+- 쓰기:
+  - 구독 신청의 "신청"(최종 완료) → `change_requests`에 `{client_id, plan_id}` insert(status 기본값 received), 성공하면 완료 화면으로 이동.
+  - 상담 요청 → `consult_requests`에 `{client_id, plan_id, source}` insert. source는 요금제 상세 `detail`, 구독 신청 `subscribe`. 성공하면 팝업을 띄운다.
+  - 나중에 다시 확인 → `saved_plans`에 `{client_id, plan_id}` insert, 성공하면 이전 페이지로 이동.
+- 읽기: 요금제 목록의 "저장함" Tag와 "지난번에 확인한 요금제가 있어요" 안내는 `saved_plans`에서 이 `client_id`의 가장 최근 1행(`saved_at` 내림차순)으로 판단한다. 기존 localStorage 저장은 쓰지 않는다.
+- 요금제 데이터(`plans`)는 지금처럼 코드(`_lib/plans.ts`)에서 쓴다. DB의 `plans`는 읽지 않는다.
+- 실패 처리(PRD는 예외 상황 제외라 기본값을 정한다): 세 쓰기 중 하나라도 실패하면 팝업·이동을 하지 않고, 해당 버튼 위에 한 줄 "저장에 실패했어요. 잠시 후 다시 시도해 주세요"를 `text-secondary`, 14px로 보인다. 실패 원인은 `console.error`로만 남긴다.
+- 인증서: 회사망의 자체 서명 인증서 때문에 Node(서버) 쪽 HTTPS 호출은 실패할 수 있다. 그래서 Supabase 호출은 브라우저(클라이언트 컴포넌트)에서만 하고, 앱 코드에서 TLS 검증을 끄지 않는다.
+- G3·G4(금지 문구, 안내 순서)와 G2(토큰)는 그대로 지킨다.

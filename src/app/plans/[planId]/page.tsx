@@ -58,10 +58,10 @@ export default async function PlanDetailPage({
           >
             변경 신청
           </Link>
-          {/* 상담 요청 버튼 (F11): 입력 없이 접수하고 안내 팝업을 띄운다.
+          {/* 상담 요청 버튼 (F11): 입력 없이 DB에 접수하고 안내 팝업을 띄운다.
               팝업의 확인을 누르면 이전 페이지로 이동한다(완료 후 변경 요청). */}
-          <ConsultRequest />
-          {/* 나중에 다시 확인 버튼 (F12): 이 요금제와 저장 시각을 브라우저에만 저장하고
+          <ConsultRequest planId={plan.id} source="detail" />
+          {/* 나중에 다시 확인 버튼 (F12): 이 요금제를 DB에 저장하고, 성공하면
               이전 페이지로 이동한다(완료 후 변경 요청). 저장을 지우는 방법과 유효기간은 [문서에 없음]. */}
           <SaveForLater planId={plan.id} />
         </div>
