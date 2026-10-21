@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-*: initial;
+
+  --color-text-primary: #181A1B;
+  --color-text-secondary: #66707A;
+  --color-text-tertiary: #878787;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-accent: #FF2E98;
+  --color-text-error: #E30036;
+  --color-text-placeholder: #B7BDC4;
+  --color-text-on-disabled: #66707A;
+
+  --color-bg-surface: #FFFFFF;
+  --color-bg-default: #F7F7F7;
+  --color-bg-subtle: #EFF1F3;
+  --color-bg-inverse: #2D2D2D;
+  --color-bg-accent-subtle: #FFF5FA;
+  --color-bg-error-subtle: #FFF0F3;
+  --color-surface-default: #FFFFFF;
+
+  --color-border-default: #D9DCDF;
+  --color-border-subtle: #EFF1F3;
+  --color-border-medium: #66707A;
+  --color-border-strong: #181A1B;
+  --color-border-focus: #FF2E98;
+  --color-border-error: #E30036;
+
+  --color-fill-primary: #FF2E98;
+  --color-fill-accent: #FF2E98;
+  --color-fill-primary-hover: #E6007E;
+  --color-fill-secondary: #D9DCDF;
+  --color-fill-tertiary: #EFF1F3;
+  --color-fill-disabled: #D9DCDF;
+  --color-fill-disabled-strong: #66707A;
+
+  --color-icon-default: #66707A;
+  --color-icon-strong: #181A1B;
+  --color-icon-primary: #000000;
+  --color-icon-accent: #FF2E98;
+  --color-icon-on-dark: #FFFFFF;
+  --color-icon-disabled: #D9DCDF;
+  --color-icon-error: #E30036;
+
+  --color-brand-primary: #FF2E98;
+
+  --text-heading-h1: 32px;
+  --text-heading-h1--line-height: 44px;
+  --text-heading-h2: 28px;
+  --text-heading-h2--line-height: 40px;
+  --text-heading-h3: 24px;
+  --text-heading-h3--line-height: 32px;
+  --text-heading-h4: 20px;
+  --text-heading-h4--line-height: 28px;
+  --text-subtitle: 18px;
+  --text-subtitle--line-height: 26px;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-body-small: 14px;
+  --text-body-small--line-height: 21px;
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-caption-small: 12px;
+  --text-caption-small--line-height: 16px;
+  --text-caption-mini: 10px;
+  --text-caption-mini--line-height: 14px;
+
+  --radius-pill: 999px;
+
+  --container-mobile: 390px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
 }
