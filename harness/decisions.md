@@ -46,3 +46,9 @@ screen-spec.md와 03-token-map.md의 '미정'·'토큰 없음' 중 구현에 걸
 - 따라서 접수 후 같은 화면의 한 줄 안내와 Disabled 상담 버튼 상태는 쓰지 않는다. 이 변경은 요금제 상세와 구독 신청 화면 양쪽의 상담 요청 버튼(공용 컴포넌트)에 적용한다.
 - 팝업은 Design.md에 컴포넌트가 없다. 기존 토큰만으로 만든다: 흰 배경 `bg-surface`, 모서리 radius 16, 본문 글자 `text-primary`, 확인 버튼은 Primary 버튼 스타일 재사용, 뒤 배경 딤은 알파 0.1 검정만 허용(G2). 화면 중앙, 키보드(Esc)·포커스 접근성은 기본만.
 - G3·G4(금지 문구, 안내 순서)는 그대로 지킨다.
+
+## Supabase DB (사용자가 직접 요청·선택, PRD §4의 "브라우저에만 저장"보다 우선)
+- 저장 범위: `plans`(요금제 3개 시드), `change_requests`(변경 신청), `consult_requests`(상담 요청), `saved_plans`(나중에 다시 확인). 이용량·약정·위약금 등 고객 예시 데이터는 코드에 그대로 둔다.
+- 고객 구분: 브라우저가 만든 익명 UUID(`client_id`). 이름·전화번호 등 개인정보 컬럼은 만들지 않는다.
+- 보안: 모든 테이블 RLS 켬. 브라우저(anon 키)는 `plans` 읽기와 신청·상담·저장 insert만. 신청·상담·저장 읽기는 서버(`SUPABASE_SERVICE_ROLE_KEY`)에서만. service role 키는 브라우저 코드에 쓰지 않는다.
+- 실행: `supabase/migrations/*.sql`을 사용자가 Supabase SQL Editor에서 직접 실행한다. 앱 코드 연결은 별도 요청이 있을 때 한다.
