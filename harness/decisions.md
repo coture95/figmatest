@@ -66,3 +66,9 @@ screen-spec.md와 03-token-map.md의 '미정'·'토큰 없음' 중 구현에 걸
 - 실패 처리(PRD는 예외 상황 제외라 기본값을 정한다): 세 쓰기 중 하나라도 실패하면 팝업·이동을 하지 않고, 해당 버튼 위에 한 줄 "저장에 실패했어요. 잠시 후 다시 시도해 주세요"를 `text-secondary`, 14px로 보인다. 실패 원인은 `console.error`로만 남긴다.
 - 인증서: 회사망의 자체 서명 인증서 때문에 Node(서버) 쪽 HTTPS 호출은 실패할 수 있다. 그래서 Supabase 호출은 브라우저(클라이언트 컴포넌트)에서만 하고, 앱 코드에서 TLS 검증을 끄지 않는다.
 - G3·G4(금지 문구, 안내 순서)와 G2(토큰)는 그대로 지킨다.
+
+## RLS 켜기 (사용자 요청·선택: client_id 헤더로 본인 행만, 새 마이그레이션 파일). 앞의 "RLS를 끈다" 결정을 대체한다.
+- SQL: `supabase/migrations/20261021010000_enable_rls.sql`. 정책은 행의 `client_id`가 요청 헤더 `x-client-id`와 같을 때만 insert·select를 허용한다. update·delete는 막는다. `plans`는 누구나 읽기만.
+- 앱 변경: 브라우저의 Supabase 클라이언트가 **모든 요청**에 `x-client-id` 헤더(= localStorage의 익명 UUID `client_id`)를 보낸다. `createClient(url, key, { global: { headers: { "x-client-id": clientId } } })` 형태. client_id는 클라이언트를 만들기 전에 정해져 있어야 한다.
+- 배포 순서: 이 앱 변경을 먼저 배포한 뒤에 SQL을 실행한다. 순서가 바뀌면 신청·상담·저장이 모두 실패한다.
+- 기존 동작(insert 3개, saved_plans 최신 1행 읽기, 실패 시 한 줄 문구)과 G2·G3·G4는 그대로 지킨다.

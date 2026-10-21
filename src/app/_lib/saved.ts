@@ -1,28 +1,14 @@
+import { getClientId } from "./client-id";
 import { getSupabase } from "./supabase";
 
 /*
  * DB 저장·읽기 모음 (Supabase). 모두 브라우저(클라이언트 컴포넌트)에서만 호출한다.
- * 고객 구분은 개인정보 없는 익명 UUID(client_id)이며, 브라우저 localStorage에 한 번 만들어 재사용한다.
+ * 고객 구분은 개인정보 없는 익명 UUID(client_id)이며 client-id.ts에서 만든다.
+ * insert·select의 client_id와 Supabase 요청 헤더(x-client-id)는 같은 값이어야 RLS를 통과한다.
  * 저장을 지우는 방법과 유효기간은 [문서에 없음].
  */
-const CLIENT_ID_KEY = "plans:client-id";
-
 export type SavedPlan = { planId: string; savedAt: string };
 export type ConsultSource = "detail" | "subscribe";
-
-/** 익명 고객 ID를 돌려준다. 없으면 crypto.randomUUID()로 만들어 localStorage에 저장한다. */
-export function getClientId(): string {
-  try {
-    const existing = window.localStorage.getItem(CLIENT_ID_KEY);
-    if (existing) return existing;
-    const created = crypto.randomUUID();
-    window.localStorage.setItem(CLIENT_ID_KEY, created);
-    return created;
-  } catch {
-    // 저장소를 쓸 수 없으면 이번 방문에서만 쓰는 ID를 쓴다([문서에 없음]).
-    return crypto.randomUUID();
-  }
-}
 
 /** 성공하면 true, 실패하면 원인을 console.error로만 남기고 false를 돌려준다. */
 async function insertRow(table: string, row: Record<string, string>): Promise<boolean> {
